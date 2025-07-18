@@ -108,8 +108,15 @@ function setDetail(id, dname, dval) {
 firebase.database().ref("projects/" + id + "/" + dname).set(String(dval))
 }
 function getDetail(id, dname) {
-let result = firebase.database().ref("projects/" + id + "/" + dname).once("value")
-return result 
+firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
+const val = snapshot.val()
+if (snapshot.exists() && val !== null && val !== undefined) {
+console.log("Value:", val)
+} else {
+console.log("Value:", "")
+return ""
+}
+})
 }
 function copy(text) {
 navigator.clipboard.writeText(text)
