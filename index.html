@@ -157,7 +157,7 @@ setDetail(currentID, "text", t.value)
 let collectedID = ""
 const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
-collectedID = match[1]
+collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
 document.open()
 document.write(getDetail(collectedID, "text"))
