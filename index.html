@@ -10,7 +10,7 @@
 <button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
 </section>
 <section id=edit>
-<button onclick=opePP()>Open public URL</button> <input type=search id=n placeholder=Name oninput=save()><br>
+<button onclick=opePP()>Open public URL</button> <button onclick=del()>Delete project</button> <input type=search id=n placeholder=Name oninput=save()><br>
 <textarea id=t oninput=save()></textarea>
 </section>
 <section id=proj>
@@ -181,11 +181,11 @@ setDetail(currentID, "name", n.value)
 let collectedID = ""
 const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
+shown("main", false)
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
 runFrame(getDetail(collectedID, "text"))
 nameP(getDetail(collectedID, "name"))
-shown("main", false)
 shown("proj", true)
 })
 }
@@ -208,6 +208,14 @@ if (name && name !== "") {
 document.title = name
 } else {
 document.title = "New project"
+}
+}
+function del() {
+if (prompt(`Are you sure you want to delete this project?
+
+Press and submit 1 if yes...`) == 1) {
+deleteProject(currentID)
+location.reload()
 }
 }
 function toCode(text) {
