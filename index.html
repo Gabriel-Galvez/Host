@@ -8,7 +8,7 @@
 <button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
 </section>
 <section id=edit>
-
+<textarea id=t oninput=save()></textarea>
 </section>
 </body>
 <script>
@@ -129,11 +129,16 @@ document.getElementById(id).style.display = "none"
 function openProject(id) {
 firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (snapshot.exists()) {
+currentID = id
+t.value = getDetail(id, "text")
 shown("main", false)
 shown("edit", true)
 } else {
 alert("Project not found!")
 }
 })
+}
+function save() {
+setDetail(currentID, "text", t.value)
 }
 </script>
