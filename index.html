@@ -16,6 +16,16 @@
 </section>
 </body>
 <link rel=stylesheet href="https://gabriel-galvez.github.io/Host/shorten.css">
+<style>
+html, body {
+overflow: hidden;
+}
+#p {
+width: 100vw;
+height: 100vh;
+border: none;
+}
+</style>
 <script>
 const fCDEV = {
 apiKey: "AIzaSyCSj-08ucArB3oiYNDq2iAriYadYOiJ27U",
@@ -165,6 +175,7 @@ if (match) {
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
 runFrame(getDetail(collectedID, "text"))
+shown("main", false)
 shown("proj", true)
 })
 }
