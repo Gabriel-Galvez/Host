@@ -24,6 +24,7 @@ measurementId: "G-3D4J5FJ5T1"
 }
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
+const projectCache = {}
 shown("edit", false)
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 let currentID = ""
@@ -108,14 +109,8 @@ function setDetail(id, dname, dval) {
 firebase.database().ref("projects/" + id + "/" + dname).set(String(dval))
 }
 function getDetail(id, dname) {
-firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
-const val = snapshot.val()
-if (snapshot.exists() && val !== null && val !== undefined) {
-return val
-} else {
-return ""
-}
-})
+const key = `${id}/${dname}`
+return projectCache[key] ?? ""
 }
 function copy(text) {
 navigator.clipboard.writeText(text)
@@ -127,11 +122,26 @@ document.getElementById(id).style.display = ""
 document.getElementById(id).style.display = "none"
 }
 }
+function loadProjectDetails(id, callback) {
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
+if (snapshot.exists()) {
+const data = snapshot.val()
+for (let key in data) {
+projectCache[`${id}/${key}`] = data[key]
+}
+callback()
+} else {
+alert("Project not found!")
+}
+})
+}
 function openProject(id) {
 firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (snapshot.exists()) {
 currentID = id
-t.value = getDetail(id, "text")
+loadProjectDetails(id, function() {
+t.value = getDetail(id, "text") 
+})
 shown("main", false)
 shown("edit", true)
 } else {
