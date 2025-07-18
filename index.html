@@ -15,7 +15,7 @@
 const firebaseConfig = {
 apiKey: "AIzaSyCSj-08ucArB3oiYNDq2iAriYadYOiJ27U",
 authDomain: "host-5397f.firebaseapp.com",
-databaseURL: "https://host-5397f-default-rtdb.firebaseio.com",
+databaseURL: "https:
 projectId: "host-5397f",
 storageBucket: "host-5397f.firebasestorage.app",
 messagingSenderId: "94637520547",
@@ -30,7 +30,7 @@ let currentID = ""
 function generateId(lengths) {
 const id = lengths.map(function(len) {
 let part = ""
-for (let i=0;i<len;i++) {
+for (let i=0; i<len; i++) {
 part += charset.charAt(Math.floor(Math.random() * charset.length))
 }
 return part
@@ -38,23 +38,25 @@ return part
 currentID = id 
 return id
 }
-function lookForProject(id, callback) {
+function lookForProject(id) {
 firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (snapshot.exists()) {
-callback(true)
+console.log("Project exists:", id)
 } else {
-callback(false)
+console.log("Project does not exist:", id)
 }
 })
 }
-function generateUniqueId(callback) {
+function generateUniqueId() {
 let intervals = 3
 function tryNext() {
 const lengths = Array(intervals).fill(4) 
 const id = generateId(lengths)
-lookForProject(id, function(exists) {
-if (!exists) callback(id)
-else {
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
+if (!snapshot.exists()) {
+currentID = id
+console.log("Unique ID generated:", id)
+} else {
 intervals++
 tryNext()
 }
@@ -79,9 +81,10 @@ currentID = id
 firebase.database().ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
 if (!error) {
 alert(`Make sure to screenshot, take a photo, or copy & paste this ID somewhere to keep it saved! You'll need this ID to edit your project and get the public URL to your project...
+
 ${currentID}`)
 copy(currentID)
-openProject(currentID) 
+openProject(currentID)
 } else {
 alert("Error saving project. Please try again.")
 }
@@ -107,7 +110,7 @@ firebase.database().ref("projects/" + id + "/" + dname).set(dval)
 function getDetail(id, dname) {
 firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
 if (snapshot.exists()) {
-console.log("Value:", snapshot.val()) 
+console.log("Value:", snapshot.val())
 } else {
 console.log("No value found")
 }
@@ -124,14 +127,13 @@ document.getElementById(id).style.display = "none"
 }
 }
 function openProject(id) {
-if (lookForProject(id)) {
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
+if (snapshot.exists()) {
 shown("main", false)
 shown("edit", true)
 } else {
 alert("Project not found!")
 }
-}
-function callback(result) {
-return
+})
 }
 </script>
