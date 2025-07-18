@@ -1,3 +1,6 @@
+<body>
+<button onclick=makeProject()>Make a project</button>
+</body>
 <script>
 const firebaseConfig = {
 apiKey: "AIzaSyCSj-08ucArB3oiYNDq2iAriYadYOiJ27U",
@@ -11,4 +14,86 @@ measurementId: "G-3D4J5FJ5T1"
 }
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+let currentID = ""
+function generateId(lengths) {
+const id = lengths.map(function(len) {
+let part = ""
+for (let i=0;i<len;i++) {
+part += charset.charAt(Math.floor(Math.random() * charset.length))
+}
+return part
+}).join("-")
+currentID = id 
+return id
+}
+function lookForProject(id, callback) {
+db.ref("projects/" + id).once("value", function(snapshot) {
+callback(snapshot.exists())
+})
+}
+function generateUniqueId(callback) {
+let intervals = 3
+function tryNext() {
+const lengths = Array(intervals).fill(4) 
+const id = generateId(lengths)
+lookForProject(id, function(exists) {
+if (!exists) callback(id)
+else {
+intervals++
+tryNext()
+}
+})
+}
+tryNext()
+}
+function makeProject() {
+let interval = 4
+function tryNext() {
+let lengths = Array(interval).fill(interval)
+let id = lengths.map(function(len) {
+let part = ""
+for (let i=0;i<len;i++) {
+part += charset.charAt(Math.floor(Math.random() * charset.length))
+}
+return part
+}).join("-")
+db.ref("projects/" + id).once("value", function(snapshot) {
+if (!snapshot.exists()) {
+currentID = id
+db.ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
+if (!error) {
+alert(`Make sure to screenshot, take a photo, or copy & paste this ID somewhere to keep it saved! You'll need this ID to edit your project and get the public URL to your project...
+${currentID}`)
+}
+})
+} else {
+interval++
+tryNext()
+}
+})
+}
+tryNext()
+}
+function deleteProject(id, callback) {
+db.ref("projects/" + id).once("value", function(snapshot) {
+if (snapshot.exists()) {
+db.ref("projects/" + id).remove(function(error) {
+callback(!error)
+})
+} else {
+callback(false)
+}
+})
+}
+function saveDetail(id, dname, dval, callback) {
+db.ref("projects/" + id + "/" + dname).set(dval, function(error) {
+if (callback) callback(!error)
+})
+}
+function getDetail(id, dname, callback) {
+db.ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
+callback(snapshot.exists() ? snapshot.val() : "")
+})
+}
 </script>
