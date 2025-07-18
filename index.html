@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang=en theme=dark>
 <head>
+<title>Free hosting</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -165,6 +166,7 @@ currentID = id
 loadProjectDetails(id, function() {
 t.value = getDetail(id, "text")
 n.value = getDetail(id, "name")
+document.title = `Hosted project - ${n.value} (edit)`
 pubU = `https://gabriel-galvez.github.io/Host/?proj=${toCode(id)}`
 })
 shown("main", false)
