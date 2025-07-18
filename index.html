@@ -17,8 +17,8 @@ messagingSenderId: "94637520547",
 appId: "1:94637520547:web:f84c856857aafb772cb116",
 measurementId: "G-3D4J5FJ5T1"
 }
-const app = initializeApp(firebaseConfig)
-const analytics = getAnalytics(app)
+firebase.initializeApp(firebaseConfig)
+firebase.analytics()
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 let currentID = ""
 function generateId(lengths) {
