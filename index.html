@@ -79,10 +79,11 @@ currentID = id
 firebase.database().ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
 if (!error) {
 alert(`Make sure to screenshot, take a photo, or copy & paste this ID somewhere to keep it saved! You'll need this ID to edit your project and get the public URL to your project...
-
 ${currentID}`)
 copy(currentID)
-openProject(currentID)
+openProject(currentID) 
+} else {
+alert("Error saving project. Please try again.")
 }
 })
 } else {
@@ -93,25 +94,23 @@ tryNext()
 }
 tryNext()
 }
-function deleteProject(id, callback) {
-db.ref("projects/" + id).once("value", function(snapshot) {
+function deleteProject(id) {
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (snapshot.exists()) {
-db.ref("projects/" + id).remove(function(error) {
-callback(!error)
+firebase.database().ref("projects/" + id).remove()
+}
 })
+}
+function saveDetail(id, dname, dval) {
+firebase.database().ref("projects/" + id + "/" + dname).set(dval)
+}
+function getDetail(id, dname) {
+firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
+if (snapshot.exists()) {
+console.log("Value:", snapshot.val()) 
 } else {
-callback(false)
+console.log("No value found")
 }
-})
-}
-function saveDetail(id, dname, dval, callback) {
-db.ref("projects/" + id + "/" + dname).set(dval, function(error) {
-if (callback) callback(!error)
-})
-}
-function getDetail(id, dname, callback) {
-db.ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
-callback(snapshot.exists() ? snapshot.val() : "")
 })
 }
 function copy(text) {
