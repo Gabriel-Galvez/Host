@@ -13,7 +13,7 @@
 </section>
 </body>
 <script>
-const firebaseConfig = {
+const fCDEV = {
 apiKey: "AIzaSyCSj-08ucArB3oiYNDq2iAriYadYOiJ27U",
 authDomain: "host-5397f.firebaseapp.com",
 databaseURL: "https://host-5397f-default-rtdb.firebaseio.com",
@@ -23,7 +23,7 @@ messagingSenderId: "94637520547",
 appId: "1:94637520547:web:f84c856857aafb772cb116",
 measurementId: "G-3D4J5FJ5T1"
 }
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(fCDEV)
 firebase.analytics()
 const projectCache = {}
 shown("edit", false)
@@ -157,14 +157,13 @@ setDetail(currentID, "text", t.value)
 let collectedID = ""
 const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
-collectedID = toNorm(match[1])
+collectedID = match[1]
 loadProjectDetails(collectedID, function() {
-const raw = getDetail(collectedID, "text")
-const fullHTML = raw.includes("<html") ? raw : (
-"<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>" +
-raw +
-"</body></html>"
-)
+document.open()
+document.write(getDetail(collectedID, "text"))
+document.close()
+})
+}
 document.open()
 document.write(fullHTML)
 document.close()
