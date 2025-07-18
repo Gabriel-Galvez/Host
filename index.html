@@ -104,15 +104,16 @@ firebase.database().ref("projects/" + id).remove()
 }
 })
 }
-function saveDetail(id, dname, dval) {
-firebase.database().ref("projects/" + id + "/" + dname).set(dval)
+function setDetail(id, dname, dval) {
+firebase.database().ref("projects/" + id + "/" + dname).set(String(dval))
 }
 function getDetail(id, dname) {
 firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
-if (snapshot.exists()) {
-console.log("Value:", snapshot.val())
+const val = snapshot.val()
+if (snapshot.exists() && val !== null && val !== undefined) {
+console.log("Value:", val)
 } else {
-console.log("No value found")
+console.log("Value:", "") 
 }
 })
 }
