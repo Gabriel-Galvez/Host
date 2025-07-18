@@ -159,8 +159,14 @@ const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
+const raw = getDetail(collectedID, "text")
+const fullHTML = raw.includes("<html") ? raw : (
+"<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>" +
+raw +
+"</body></html>"
+)
 document.open()
-document.write(getDetail(collectedID, "text"))
+document.write(fullHTML)
 document.close()
 })
 }
