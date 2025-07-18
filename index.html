@@ -8,7 +8,7 @@
 <button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
 </section>
 <section id=edit>
-<button onclick=copy(ur.innerText)>Copy public URL</button>: <span id=ur>https://gabriel-galvez.github.io/Host/?proj=<span id=c></span></span><br>
+<button onclick=opePP()>Copy public URL</button><br>
 <textarea id=t oninput=save()></textarea>
 </section>
 </body>
@@ -142,7 +142,7 @@ if (snapshot.exists()) {
 currentID = id
 loadProjectDetails(id, function() {
 t.value = getDetail(id, "text")
-c.innerText = toCode(id)
+pubU = `https://gabriel-galvez.github.io/Host/?proj=${toCode(id)}`
 })
 shown("main", false)
 shown("edit", true)
@@ -163,6 +163,9 @@ document.open()
 document.write(getDetail(collectedID, "text"))
 document.close()
 })
+}
+function opePP() {
+window.open(pubU)
 }
 function toCode(text) {
 text = text.split('').map(char => char.charCodeAt(0).toString(2).replace(/ /g, '')).join('2')
