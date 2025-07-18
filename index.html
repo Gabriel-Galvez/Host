@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang=en theme=dark>
 <head>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
@@ -24,6 +26,11 @@ overflow: hidden;
 width: 100vw;
 height: 100vh;
 border: none;
+}
+#t {
+width: 90%;
+height: 500px;
+resize: none;
 }
 </style>
 <script>
@@ -244,3 +251,4 @@ text = text.split('2').map(bin => String.fromCharCode(parseInt(bin, 2))).join(''
 return text
 }
 </script>
+</html>
