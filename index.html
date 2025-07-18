@@ -11,6 +11,9 @@
 <button onclick=opePP()>Open public URL</button><br>
 <textarea id=t oninput=save()></textarea>
 </section>
+<section id=proj>
+<iframe id=p></iframe>
+</section>
 </body>
 <script>
 const fCDEV = {
@@ -27,6 +30,7 @@ firebase.initializeApp(fCDEV)
 firebase.analytics()
 const projectCache = {}
 shown("edit", false)
+shown("proj", false)
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 let currentID = ""
 function generateId(lengths) {
@@ -159,10 +163,20 @@ const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
-document.open()
-document.write(getDetail(collectedID, "text"))
-document.close()
+runFrame(getDetail(collectedID, "text"))
+shown("proj", true)
 })
+}
+function runFrame(text) {
+const iframe = document.getElementById('p');
+if (!iframe) {
+console.error('No iframe with id "p" found.')
+return
+}
+const doc = iframe.contentDocument || iframe.contentWindow.document
+doc.open()
+doc.write(text)
+doc.close()
 }
 function opePP() {
 window.open(pubU)
