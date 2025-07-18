@@ -8,6 +8,7 @@
 <button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
 </section>
 <section id=edit>
+<button onclick=copy(ur.innerText)>Copy public URL</button>: <span id=ur>https://gabriel-galvez.github.io/Host/?proj=<span id=c></span></span><br>
 <textarea id=t oninput=save()></textarea>
 </section>
 </body>
@@ -140,7 +141,8 @@ firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (snapshot.exists()) {
 currentID = id
 loadProjectDetails(id, function() {
-t.value = getDetail(id, "text") 
+t.value = getDetail(id, "text")
+c.innerText = toCode(id)
 })
 shown("main", false)
 shown("edit", true)
