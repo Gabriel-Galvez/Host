@@ -10,7 +10,7 @@
 <button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
 </section>
 <section id=edit>
-<button onclick=opePP()>Open public URL</button><br>
+<button onclick=opePP()>Open public URL</button> <input type=search id=n placeholder=Name oninput=save()><br>
 <textarea id=t oninput=save()></textarea>
 </section>
 <section id=proj>
@@ -164,6 +164,7 @@ if (snapshot.exists()) {
 currentID = id
 loadProjectDetails(id, function() {
 t.value = getDetail(id, "text")
+n.value = getDetail(id, "name")
 pubU = `https://gabriel-galvez.github.io/Host/?proj=${toCode(id)}`
 })
 shown("main", false)
@@ -175,6 +176,7 @@ alert("Project not found!")
 }
 function save() {
 setDetail(currentID, "text", t.value)
+setDetail(currentID, "name", n.value)
 }
 let collectedID = ""
 const match = window.location.href.match(/\?proj=([^#]+)$/)
@@ -182,6 +184,7 @@ if (match) {
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
 runFrame(getDetail(collectedID, "text"))
+nameP(getDetail(collectedID, "name"))
 shown("main", false)
 shown("proj", true)
 })
@@ -199,6 +202,13 @@ doc.close()
 }
 function opePP() {
 window.open(pubU)
+}
+function nameP(name) {
+if (name && name !== "") {
+document.title = name
+} else {
+document.title = "New project"
+}
 }
 function toCode(text) {
 text = text.split('').map(char => char.charCodeAt(0).toString(2).replace(/ /g, '')).join('2')
