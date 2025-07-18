@@ -152,4 +152,14 @@ alert("Project not found!")
 function save() {
 setDetail(currentID, "text", t.value)
 }
+let collectedID = ""
+const match = window.location.href.match(/\?proj=([^#]+)$/)
+if (match) {
+collectedID = match[1]
+loadProjectDetails(collectedID, function() {
+document.open()
+document.write(getDetail(collectedID, "text"))
+document.close()
+})
+}
 </script>
