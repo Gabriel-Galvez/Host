@@ -110,7 +110,7 @@ firebase.database().ref("projects/" + id + "/" + dname).set(String(dval))
 function getDetail(id, dname) {
 firebase.database().ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
 const val = snapshot.val()
-if (snapshot.exists() && val !== null && val !== undefined) {
+if (snapshot.exists() && val !== null && val !== "undefined") {
 console.log("Value:", val)
 } else {
 console.log("Value:", "") 
