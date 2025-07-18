@@ -4,7 +4,12 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
 <body>
-<button onclick=makeProject()>Make a project</button>
+<section id=main>
+<button onclick=makeProject()>Make a project</button> <button onclick="openProject(prompt('Please provide the project ID...'))">Open project</button>
+</section>
+<section id=edit>
+
+</section>
 </body>
 <script>
 const firebaseConfig = {
@@ -19,6 +24,7 @@ measurementId: "G-3D4J5FJ5T1"
 }
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
+shown("edit"", false)
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 let currentID = ""
 function generateId(lengths) {
@@ -33,8 +39,12 @@ currentID = id
 return id
 }
 function lookForProject(id, callback) {
-db.ref("projects/" + id).once("value", function(snapshot) {
-callback(snapshot.exists())
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
+if (snapshot.exists()) {
+callback(true)
+} else {
+callback(false)
+}
 })
 }
 function generateUniqueId(callback) {
@@ -69,7 +79,10 @@ currentID = id
 firebase.database().ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
 if (!error) {
 alert(`Make sure to screenshot, take a photo, or copy & paste this ID somewhere to keep it saved! You'll need this ID to edit your project and get the public URL to your project...
+
 ${currentID}`)
+copy(currentID)
+openProject(currentID)
 }
 })
 } else {
@@ -100,5 +113,22 @@ function getDetail(id, dname, callback) {
 db.ref("projects/" + id + "/" + dname).once("value", function(snapshot) {
 callback(snapshot.exists() ? snapshot.val() : "")
 })
+}
+function copy(text) {
+navigator.clipboard.writeText(text)
+}
+function shown(id, tf) {
+if (tf) {
+document.getElementById(id).style.display = ""
+} else {
+document.getElementById(id).style.display = "none"
+}
+}
+function openProject(id) {
+if (lookForProject(id)) {
+shown("main", false)
+shown("edit", true)
+} else {
+alert("Project not found!")
 }
 </script>
