@@ -58,15 +58,15 @@ function tryNext() {
 let lengths = Array(interval).fill(interval)
 let id = lengths.map(function(len) {
 let part = ""
-for (let i=0;i<len;i++) {
+for (let i = 0; i < len; i++) {
 part += charset.charAt(Math.floor(Math.random() * charset.length))
 }
 return part
 }).join("-")
-db.ref("projects/" + id).once("value", function(snapshot) {
+firebase.database().ref("projects/" + id).once("value", function(snapshot) {
 if (!snapshot.exists()) {
 currentID = id
-db.ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
+firebase.database().ref("projects/" + currentID).set({ created: Date.now().toString() }, function(error) {
 if (!error) {
 alert(`Make sure to screenshot, take a photo, or copy & paste this ID somewhere to keep it saved! You'll need this ID to edit your project and get the public URL to your project...
 ${currentID}`)
