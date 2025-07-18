@@ -186,6 +186,8 @@ setDetail(currentID, "name", n.value)
 let collectedID = ""
 const match = window.location.href.match(/\?proj=([^#]+)$/)
 if (match) {
+document.documentElement.style.background = "none"
+document.body.style.background = "none"
 shown("main", false)
 collectedID = toNorm(match[1])
 loadProjectDetails(collectedID, function() {
